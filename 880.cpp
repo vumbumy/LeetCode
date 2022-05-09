@@ -6,41 +6,57 @@
 using namespace std;
 
 class Solution {
+    int count = 0;
+    vector<int> indexes;
+    vector<int> lengths;
+    vector<int> decodeds;
 public:
+    int getMaxLength() {
+        int length = 0;
+
+        for(int i=0;i<count;i++) {
+            length += lengths[i];
+            length *= decodeds[i];
+        }
+
+        return length;
+    }
+    int getIndex(int K) {
+
+    }
 	string decodeAtIndex(string S, int K) {
+	    int index = 0;
+	    int length = 0;
+	    int decoded = 1;
+
+	    int kk = K;
+
+	    bool need_init = false;
 		for (int i = 0; i < S.length();i++) {
-			int strLength = -1;
+            bool locked = false;
+		    if('0' <= S[i] && S[i] <='9') {
+		        decoded *= S[i] - '0';
 
-			//printf("char: %c\n", S[i]);
-			if ('0' <= S[i] && '9' >= S[i]) {
-				strLength = i;
-			}
+		        need_init = true;
+		    } else {
+		        if(need_init) {
+		            count++;
 
-			if (strLength == -1)
-				continue;
+                    indexes.push_back(i);
+		            lengths.push_back(length);
+		            decodeds.push_back(decoded);
 
-			/*printf("strLength: %d\n", strLength);*/
+		            length = 0;
+		            decoded = 1;
 
-			int repeat = S[i] - '0';
-			string repeatedStr = "";
-			for (int j = 0; j < repeat; j++) {
-				//cout << S.substr(0, strLength) << endl;
-				repeatedStr += S.substr(0, strLength);
+		            need_init = false;
+		        }
+		        length++;
+		    }
 
-				if (K - 1 < repeatedStr.length()) {
-					//cout << S << " / " << K << endl;
-					return string(1, repeatedStr[K - 1]);
-				}
-			}
-
-			i = repeat * strLength - 1 ;
-
-			S.replace(0, strLength + 1, repeatedStr);
-		}
-
-		if (K - 1 < S.length()) {
-			//cout << S << " / " << K - 1 << endl;
-			return string(1, S[K - 1]);
+		    if(K <= getMaxLength()) {
+		        return string(1, S[getIndex(K)]);
+		    }
 		}
 
 		return "";
@@ -48,10 +64,12 @@ public:
 };
 
 int main() {
-	cout << Solution().decodeAtIndex("leet2code3", 10) << endl;
-	cout << Solution().decodeAtIndex("ha22", 5) << endl;
-	cout << Solution().decodeAtIndex("a2345678999999999999999", 1) << endl;
-	cout << Solution().decodeAtIndex("y959q969u3hb22odq595", 222280369) << endl;
+	cout << Solution().decodeAtIndex("a2b3c4d5e6f7g8h9", 10) << endl;
+//	cout << Solution().decodeAtIndex("leet2code3", 10) << endl;
+//	cout << Solution().decodeAtIndex("ha22", 5) << endl;
+//	cout << Solution().decodeAtIndex("a2345678999999999999999", 1) << endl;
+//	cout << Solution().decodeAtIndex("y959q969u3hb22odq595", 222280369) << endl;
+//	cout << Solution().decodeAtIndex("a2b3c4d5e6f7g8h9", 9) << endl;
 
 	return 0;
 }
