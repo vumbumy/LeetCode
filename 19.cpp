@@ -6,10 +6,10 @@ using namespace std;
 //Definition for singly-linked list.
 struct ListNode {
     int val;
-    ListNode *next;
+    ListNode* next;
     ListNode() : val(0), next(nullptr) {}
     ListNode(int x) : val(x), next(nullptr) {}
-    ListNode(int x, ListNode *next) : val(x), next(next) {}
+    ListNode(int x, ListNode* next) : val(x), next(next) {}
 };
 
 class Solution {
@@ -17,43 +17,39 @@ public:
     ListNode* removeNthFromEnd(ListNode* head, int n) {
         queue<ListNode*> q;
 
-        ListNode* node = head;
+        ListNode* prev = new ListNode(0, head);
 
+        ListNode* node = prev;
         while (node != nullptr) {
             q.push(node);
 
             node = node->next;
-            if(q.size() > n + 1) {
+            if (q.size() > n + 1) {
                 q.pop();
             }
         }
 
         ListNode* front = q.front();
 
-        if (head == front) {
-            return nullptr;
-        } else if (front != nullptr) {
-            node = front->next;
+        ListNode* d = front->next;
 
-            if (node != nullptr) {
-                front->next = node->next;
-            } else {
-                front->next = nullptr;
-            }
+        if (d != nullptr) {
+            front->next = d->next;
+            delete d;
         }
 
-        return head;
+        return prev->next;
     }
 };
 
 int main() {
     Solution s = Solution();
 
-    int src[] = {1};
+    int src[] = { 1 };
     int n = sizeof(src) / sizeof(src[0]) - 1;
 
     ListNode* head = nullptr;
-    for(int i=n;i>=0;i--) {        
+    for (int i = n; i >= 0; i--) {
         head = new ListNode(src[i], head);
     }
 
